@@ -1,0 +1,30 @@
+                              Documentação da montagem dos Sistema
+                              
+01 - Download do Ecllipse
+02 - Criar o projeto Spring Boot na página https://start.spring.io
+03 - Importar o projeto gerado no Eclipse
+     03.1 - Alterar no pom.xml para a versão do curso na tag <PARENT>
+     03.2 - O projeto é gerado com starter do Spring Boot e o starter do Test e o plug-in no build para gerar o JAR
+04 - Baixar Postgre SQL.
+05 - Adicionar módulo Spring Data JPA no Maven.
+06 - Adicionar dependencia do Postgre SQL
+07 - Adicionar dependência do Lombok (Elimina a necessidade de gerar getter, setter, hascode ...)
+08*- Projeto começou a dar pau na pasta de test.
+     08.1 - Instalar dependência do Junit.
+09 - Criar a camada Repository para Lancamento e usuário.
+     09.1 Cria o método existByEmail no UsuarioRepository
+10 - Criar a camada Service.
+     10.1 - Criar as interfaces da camada Service
+11 - Criar a camada de implemetação de Service.
+     11.1 implemetar o método valida email na classe UsuarioServiceImpl
+     11.2 Criar teste de integração para teste método.
+12*- Erro Junit no MinhasFinancasApplicationTests
+     12.1 Estava referenciando org.junit.jupiter.api.Test passei para org.junit.Test.
+13*- Erro de método não implementado no postgres
+     13.1 - Acrescentei estas linhas no application.properties:
+            spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults = false
+            spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL9Dialect
+14 - Passar a usar o banco em emória H2.
+     14.1 - Criar o arquivo application-teste.properties na pasta de recusrsos.
+     14.2 - Colocar a dependência do H2 no pom.xml.
+15*- O banco de dados H2 não precisa das linhas de dialeto.

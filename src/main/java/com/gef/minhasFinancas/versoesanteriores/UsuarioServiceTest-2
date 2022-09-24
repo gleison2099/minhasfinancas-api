@@ -1,0 +1,104 @@
+@SpringBootTest 
+@RunWith(SpringRunner.class)
+@ActiveProfiles("test")
+public class UsuarioServiceTest {
+	@SpyBean
+	// Com o SbyBean deve-se usar a instancia real e elimina-se o método setup
+	UsuarioServiceImpl service;
+	//UsuarioService service;
+	
+	@MockBean
+	// Já cria instância mockada eliminando
+	// a necessidade da primeira linha 01 do método setup
+	UsuarioRepository repository;
+	
+//	@Before
+//	public void setup() {
+//	 // repository = Mockito.mock(UsuarioRepository.class);
+//     
+//     // Usado sem mockar o service
+//	  service = new UsuarioServiceImpl(repository);
+//	 // Padrão para mockar com spy sem o SpyBean
+//	  service  = Mockito.spy(UsuarioServiceImpl.class);
+//	}
+	
+	@Test
+	public void deveLancarErroQuandoSenhaNaoBater() {
+		
+		// Cenário
+		String senha = "senha";
+		Usuario usuario = Usuario.builder().email("email@email.com").senha(senha).build();
+		Mockito.when(repository.findByEmail(Mockito.anyString())).thenReturn(Optional.of(usuario));
+		
+		// Ação
+		Throwable exception = Assertions.catchThrowable(()-> service.autenticar("email@email.com", "123"));
+		
+		// Verificação
+		Assertions.assertThat(exception).isInstanceOf(ErroAutenticacao.class).hasMessage("Senha inválida");
+	}
+	
+	@Test 
+	public void deveLancarErroQuandoNaoEncontrarUsuarioComEmailInformado() {
+		
+		// Cenário
+		Mockito.when(repository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
+		
+		// Ação
+		Throwable exception = Assertions.catchThrowable(() -> service.autenticar("email@email.com", "senha"));
+		
+		// Verificação
+		Assertions.assertThat(exception)
+		         .isInstanceOf(ErroAutenticacao.class)
+		         .hasMessage("Usuário não encontrado para o email informado");
+	}
+	
+	// Espera que não seja lançada nenhuma exceção.
+	@Test(expected = Test.None.class)
+	public void deveAutenticarUmUsuarioComSucesso() {
+		// Cenário
+		String email = "email@email.com";
+		String senha = "senha";
+		
+		Usuario usuario = Usuario.builder().email(email).senha(senha).id(1l).build();
+		// Quando acessado o método findByEmail retornará um objeto usuario.
+		Mockito.when(repository.findByEmail(email)).thenReturn(Optional.of(usuario));
+		
+		// Ação
+		Usuario result = service.autenticar(email, senha);
+		
+		// Verificação
+		Assertions.assertThat(result).isNotNull();
+	}
+	
+	@Test(expected = Test.None.class)
+	// Teste do método validarEmail.
+	// Cenário 01 - Não deve lançar excessão se o email não existir
+	public void deveValidarEmail() {
+		
+		// Cenário
+		// Atraves do Mockito força resultado false na chamada do método existsByEmail.
+		Mockito.when(repository.existsByEmail(Mockito.anyString())).thenReturn(false);
+		
+		// Acão
+		service.validarEmail("email@email.com");
+		
+		// Verificação
+		// Já está sendo feita na anotação
+		
+	}
+	
+	@Test(expected = RegraNegocioException.class)
+	// Teste do método validarEmail.
+	// Cenário 02 - Deve lançar a excessão RegraNegocioException se o email já estiver cadastrado.
+	public void deveLancarErroAoValidarEmailQuandoExistirEmailCadastrado() {
+		
+		// Cenário
+		// Atraves do Mockito força resultado true na chamada do método existsByEmail.
+		// Retornando a exceção que informa que usuario já existe.
+		Mockito.when(repository.existsByEmail(Mockito.anyString())).thenReturn(true);
+		
+		// Acão
+		service.validarEmail("email@email.com");
+	}
+	
+}
