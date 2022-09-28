@@ -1,6 +1,8 @@
 package com.gef.minhasFinancas.service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import com.gef.minhasFinancas.model.entity.Lancamento;
 import com.gef.minhasFinancas.model.enuns.StatusLancamento;
@@ -20,5 +22,8 @@ public interface LancamentoService {
 	
 	void validar(Lancamento lancamento);
 	
-
+	Optional<Lancamento> obterPorId(Long id);
+	
+	BigDecimal ObterSaldoPorUsuario(Long id);
+	
 }
