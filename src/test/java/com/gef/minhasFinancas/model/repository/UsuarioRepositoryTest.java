@@ -15,15 +15,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.gef.minhasFinancas.model.entity.Usuario;
 
-
-
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
-// Cria uma instancia do BD e a apaga após os testes
-// Também cria uma transação e ao final executa um rollback
 @DataJpaTest
-// Sobrescreve configurações no ambiente de teste
-// O paramaetro NONE não permitirá que isto acontecça
 @AutoConfigureTestDatabase(replace =  Replace.NONE)
 public class UsuarioRepositoryTest {
 	
@@ -98,7 +92,7 @@ public class UsuarioRepositoryTest {
 	}
 	
 	public static Usuario criarUsuario() {
-		return  Usuario
+		return  Usuario 
 					.builder()
 					.nome("usuario")
 					.email("usuario@email.com")

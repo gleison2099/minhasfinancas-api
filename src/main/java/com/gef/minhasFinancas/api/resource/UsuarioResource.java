@@ -19,17 +19,15 @@ import com.gef.minhasFinancas.model.entity.Usuario;
 import com.gef.minhasFinancas.service.LancamentoService;
 import com.gef.minhasFinancas.service.UsuarioService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/usuarios")
+@RequiredArgsConstructor
 public class UsuarioResource {
 	
-	private UsuarioService service;
-	private LancamentoService lancamentoService ;
-	
-	public UsuarioResource(UsuarioService service, LancamentoService lancamentoService) {
-		this.service = service;
-		this.lancamentoService = lancamentoService;
-	}
+	private final UsuarioService service;
+	private final LancamentoService lancamentoService ;
 	
 	@PostMapping("/autenticar")
 	public ResponseEntity autenticar(@RequestBody UsuarioDTO dto) {
@@ -57,9 +55,7 @@ public class UsuarioResource {
 			
 		} catch (RegraNegocioException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
-			
 		}
-		
 	}
 	
 	@GetMapping("{id}/saldo")
@@ -75,6 +71,4 @@ public class UsuarioResource {
 		
 		return ResponseEntity.ok(saldo);
 	}
-	
-
 }
